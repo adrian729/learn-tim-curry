@@ -5,7 +5,7 @@ Values are **never** changed. They can be assigned only **once**.
 How to do things then?
 **RECURSION**. No loops!
 
-```
+```Haskell
 cont :: Int -> [Int] -> Int
 count n list = go 0 list
     where
@@ -20,19 +20,19 @@ count n list = go 0 list
 
 ## Lambda functions
 Functions without a name
-```
+```Haskell
 \var1 var2 ... varN -> expr
 ```
 
 Example, having:
-```
+```Haskell
 satisfies :: (Int -> Bool) -> Int -> String
 satisfies check n
     | check n = "The number " ++ show n ++ " passes check"
     | otherwise = "The number " ++ show n ++ " doesn't pass"
 ```
 calling with a lambda:
-```
+```Haskell
 ghci> satisfies (\x -> x > 0) 5
 "The number 5 passes check"
 ghci> satisfies (\x -> x > 0) (-3)
@@ -41,7 +41,7 @@ ghci> satisfies (\x -> x > 0) (-3)
 
 ## Partial application
 Applying only a part of the parameters to a function returns another function (expecting the missing params):
-```
+```Haskell
 ghci> :t div
 div :: Integral a => a -> a -> a
 ghci> :t +d div
@@ -58,12 +58,12 @@ ghci> div12By 3
 Applying a number to div, which expects two, returns a function that expects the missing number.
 
 Another example:
-```
+```Haskell
 applyTwice :: (Integer -> Integer) -> Integer -> Integer
 applyTwice f x = f (f x)
 ```
 
-```
+```Haskell
 ghci> applyTwice (+ 20) 17
 57
 ghci> applyTwice (* 2) 4
@@ -73,7 +73,7 @@ ghci> applyTwice (* 2) 4
 ## Standard HOFs
 Example of standard HOFs: map, filter, any, concatMap, iterate
 
-```
+```Haskell
 ghci> map not [True, False, True]
 [False,True,False]
 ghci> map (* 2) [1 .. 5]
@@ -93,7 +93,7 @@ ghci> take 10 (iterate (* 2) 1)
 ## Functions inside lists
 Everything is a function! So of course there can be lists of functions or partials.
 
-```
+```Haskell
 ghci> head [(* 2), div 12, (+ 10)] 5
 10
 ghci> last [(* 2), div 12, (+ 10)] 5

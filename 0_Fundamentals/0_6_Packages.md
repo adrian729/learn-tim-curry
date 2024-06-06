@@ -6,7 +6,7 @@
 - **Prelude**: the module from **base** imported by default
 
 Example import a package:
-```
+```Haskell
 ghci> import Data.List
 ghci> sort [3, 1, 2]
 [1,2,3]

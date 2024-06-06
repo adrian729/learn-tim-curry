@@ -93,3 +93,45 @@ data Result
 divide :: Int -> Int -> Result
 divide _ 0 = Error "Division by zero!"
 divide x y = Ok (div x y)
+
+data IntList
+  = Empty
+  | Cons Int IntList
+  deriving (Show)
+
+intListLength :: IntList -> Int
+intListLength Empty = 0
+intListLength (Cons _ xs) = 1 + intListLength xs
+
+nzeroes :: Int -> IntList
+nzeroes 0 = Empty
+nzeroes n = Cons 0 (nzeroes (n - 1))
+
+newtype Volts = MkVolts Int
+
+newtype Amps = MkAmps Int
+
+newtype Ohms = MkOhms Int
+
+intensity :: Volts -> Ohms -> Amps
+intensity (MkVolts v) (MkOhms r) = MkAmps (v `div` r)
+
+dup :: a -> (a, a)
+dup x = (x, x)
+
+data Box a = MkBox
+  { value :: a
+  }
+  deriving (Show)
+
+-- Need to check how to actually use this...
+type IntBox = Box Int
+
+find :: (a -> Bool) -> [a] -> Maybe a
+find _ [] = Nothing
+find p (x : xs)
+  | p x = Just x
+  | otherwise = find p xs
+
+takeEven5 :: [[a]] -> [[a]]
+takeEven5 list = take 5 (filter (even . length) list)

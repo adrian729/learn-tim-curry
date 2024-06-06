@@ -5,7 +5,7 @@
 
 ### Types of numbers
 To check the default number type you can use *:t +d* to get a more *friendly* result.
-```
+```Haskell
 ghci> :t 21
 21 :: Num a => a
 ghci> :t +d 21
@@ -13,7 +13,7 @@ ghci> :t +d 21
 ```
 ### Types of functions
 
-```
+```Haskell
 ghci> :t not
 not :: Bool -> Bool
 ghci> :t div

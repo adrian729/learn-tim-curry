@@ -1,7 +1,7 @@
 ## Control flow
 
 ### if-then-else
-```
+```Haskell
 -- Return first elem of the list or the given default val
 headOrDefault :: Int -> [Int] -> Int
 headOrDefault def list = if null list then def else head list
@@ -18,7 +18,7 @@ Conditional matching, guards represented by **|**
 
 Syntax is: guard condition = result
 
-```
+```Haskell
 sign :: Int -> String
 sign n
     | n == 0    = "Zero"
@@ -27,17 +27,17 @@ sign n
 ```
 
 ### let-in
-```
+```Haskell
 let var = expr in result
 ```
 or multiline
-```
+```Haskell
 let var1 = expr1
     var2 = expr2
 in result
 ```
 Example:
-```
+```Haskell
 sameThreeAround :: [Int] -> Bool
 sameThreeAround list =
     let firstThree = take 3 list
@@ -46,7 +46,7 @@ sameThreeAround list =
 ```
 
 ### where
-```
+```Haskell
 appendLastTwos :: [Int] -> [Int] -> [Int]
 appendLastTwos list1 list2 = lastTwo list1 ++ lastTwo list2
     where
