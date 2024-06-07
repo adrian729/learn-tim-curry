@@ -35,20 +35,6 @@ What is the difference between the two examples? It is two kinds of polymorphism
 - **Parametric polymorphism**: same behaviour for any type.
 - **Ad-hoc polymorphism**: different behaviour for different types.
 
-### Parametric polymorphism examples
-- Get first element of a pair
-- Reversing lists
-- List length
-- Take X elements from a list
-- Function composition
-
-### Ad-hoc polymorphism examples
-- Number addition
-- Equality
-- Comparison
-- Convertion to string
-- Parsing from a string
-
 ## Parametric polymorphism
 Parametric polymorphism allows us to create functions that are type-agnostic by using `type variables`. This means that we can create a function that works with any type as long as it is consistent: all the cases of the same `type variable` must be of the same type.
 
@@ -72,8 +58,23 @@ ghci> dup 2.4
 (2.4,2.4)
 ```
 
+### Parametric polymorphism examples
+- Get first element of a pair
+- Reversing lists
+- List length
+- Take X elements from a list
+- Function composition
+
+
 ## Ad-hoc polymorphism
 Haskell supports ad-hoc polymorphism through type classes.
+
+### Ad-hoc polymorphism examples
+- Number addition
+- Equality
+- Comparison
+- Convertion to string
+- Parsing from a string
 
 ### Type classes
 ```Haskell
@@ -85,7 +86,7 @@ class Display a where
 - `a` Type variable
 - `display :: a -> String` function name and type signature
 
-#### Type class instances
+### Type class instances
 To implement classes, we need to define instances for the types we want to support.
 
 ```Haskell
@@ -100,7 +101,7 @@ instance Display Char where
 ```
 Here we use the definition of String: a String is a list of characters, so we only need to put the character in a list.
 
-##### Using instances
+#### Using instances
 ```Haskell
 greet :: Display a => a -> String
 greet x = "Hello, " ++ display x ++ "!"
@@ -110,12 +111,13 @@ greet x = "Hello, " ++ display x ++ "!"
 displayBoth :: (Display a, Display b) => a -> b -> String
 displayBoth x y = display x ++ " and " ++ display y
 ```
+
 ### Separation of concerns
 - **data**: what is stored inside?
 - **class**: what can be done with it?
 - **instance**: how does it behave for a specific data?
 
-## Default methods
+### Default methods
 ```Haskell
 class Display a where
   {-# MINIMAL display #-}
@@ -129,15 +131,15 @@ class Display a where
 - `{-# MINIMAL display #-}`: `MINIMAL` pragma specifies the minimum methods that need to be implemented for the class to be valid. It is only for documentation/helping knowing what is needed, the compiler doens't check it.
 - `displayList`: default implementation for the display of a list of elements. It will work for any type which implements `Display`.
 
-### Big typeclasses
+#### Big typeclasses
 - More performant
 - Allows to implement it differently for different types
 
-### Small typeclasses
+#### Small typeclasses
 - Smaller possibility of errors
 - Easier to write instances
 
-# Standard Typeclasses
+### Standard Typeclasses
 - `Eq` - check equality
 - `Ord` - compare
 - `Show` - convert to string
@@ -146,6 +148,108 @@ class Display a where
 - `Enum` - is an enumeration
 - `Num` - is a number (implements `+`, `-`, `*`, etc)
 
+### Eq
+```Haskell
+class Eq a where
+  {-# MINIMAL (==) | (/=) #-}
+
+  (==), (/=) :: a -> a -> Bool
+
+  x /= y = not (x == y)
+  x == y = not (x /= y)
+```
+`{-# MINIMAL (==) | (/=) #-}`: minimal implementation is **EITHER** `==` or `/=`.
+
+### Ord
+```Haskell
+data Ordering
+  = LT -- ^ Less than
+  | EQ -- ^ Equal
+  | GT -- ^ Greater than
+
+class (Eq a) => Ord a where
+  {-# MINIMAL compare | (<=) #-}
+
+  compare :: a -> a -> Ordering
+  (<), (<=), (>), (>=) :: a -> a -> Bool
+  max, min :: a -> a -> a
+
+  compare x y = if x == y then EQ
+                else if x <= y
+                then LT else GT
+```
+`class (Eq a) => Ord a where`: `Ord` is a subclass of `Eq`. This means to implement it you need to implement both `Ord` and `Eq`.
+
+### Num
+```Haskell
+class Num a where
+  (+), (-), (*) :: a -> a -> a
+  negate, abs, signum :: a -> a
+
+  fromInteger :: Integer -> a
+
+  x - y = x + negate y
+  negate x = 0 - x
+```
+
+## Type inference
+GHC has tools to infer which contrains you require for a function.
+
+For example, if we wanted to have:
+```Haskell
+check x y = x + y < x * y
+```
+
+We can ask GHCi to infer the type:
+```Haskell
+ghci> :t check
+check :: (Num a, Ord a) => a -> a -> Bool
+```
+
+## Deriving
+GHC can automatically derive instances for some typeclasses.
+
+```Haskell
+data Color
+  = Red
+  | Green
+  | Blue
+  deriving (Eq, Ord, Show, Read, Enum, Bounded, Ix)
+```
+
+GHC will automatically derive instances for `Eq`, `Ord`, `Show`, `Read`, `Enum`, `Bounded`, and `Ix`.
+
+If trying to specify non-standard typeclasses, GHC is not able to derive them.
+```Haskell
+data Bit
+  = Zero
+  | One
+  deriving (Num)
+```
+The above will throw an error saying `'Num' is not a stock derivable class`. This is because `Num` is not a standard typeclass that can be derived automatically.
+
+### GeneralizedNewtypeDeriving
+For newtype, this *LANGUAGE* pragma allows to derive any typeclass of the original type.
+
+```Haskell
+{-# LANGUAGE GeneralizedNewtypeDeriving #-}
+
+newtype Size = Size
+  { unSize :: Int
+  } deriving (  Show
+              , Read
+              , Eq
+              , Ord
+              , Enum
+              , Bounded
+              , Ix
+              , Num
+              , Integral
+              , Real
+              , Bits
+              , FiniteBits
+              )
+```
 
 ## Polymorphic types
 Types can also be polymorphic.

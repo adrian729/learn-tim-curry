@@ -3,6 +3,7 @@
 {-# HLINT ignore "Use foldr" #-}
 {-# HLINT ignore "Eta reduce" #-}
 {-# HLINT ignore "Use splitAt" #-}
+{-# HLINT ignore "Use newtype instead of data" #-}
 module Example where
 
 increase :: Integer -> Integer
@@ -135,3 +136,6 @@ find p (x : xs)
 
 takeEven5 :: [[a]] -> [[a]]
 takeEven5 list = take 5 (filter (even . length) list)
+
+class Singleton f where
+  singleton :: a -> f a

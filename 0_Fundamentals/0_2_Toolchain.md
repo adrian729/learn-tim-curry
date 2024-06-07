@@ -7,7 +7,8 @@
     - **:t** type of an expression
     - **:t +d** type of an expression with defaulting
     - **:l** load a module
-    - **:i** information about a function or type
+    - **:i**, **:info** information about a function or type
+    - **:k** kind of a type
 - **cabal**: Haskell build tool
 - **stack**: Haskell build tool based on snapshots and build on top of cabal
 - **HLS (Haskell Language Server)**: Language Server Protocol (LSP) support for Haskell
